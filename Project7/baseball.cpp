@@ -12,20 +12,31 @@ public:
         : question{ question } {}
 
     GuessResult guess(const string& guessNumber) {
-        GuessResult result{ false, 0, 0 };
         assertIllegalArgument(guessNumber);
-        for (int questionIndex = 0; questionIndex < maxDigitCount; questionIndex++) {
-            for (int guessNumberIndex = 0; guessNumberIndex < maxDigitCount; guessNumberIndex++) {
-                if (question[questionIndex] == guessNumber[guessNumberIndex]) {
-                    if (questionIndex == guessNumberIndex) result.strikes++;
-                    else result.balls++;
-                }
-            }
-        }
-
-        if (result.strikes == maxDigitCount) result.solved = true;
-        return result;
+        int strikes = countStrikes(guessNumber);
+        return {checkSolved(strikes), strikes, countBalls(guessNumber)};
     }
+    int countStrikes(const string& guessNumber) {
+        int strikes = 0;
+        for (int number = 0; number < maxDigitCount; number++)
+        {
+            if (question[number] == guessNumber[number]) strikes++;
+        }
+        return strikes;
+    }
+
+    int countBalls(const string& guessNumber) {
+        int balls = 0;
+        if (question[0] == guessNumber[1] || question[0] == guessNumber[2]) balls++;
+        if (question[1] == guessNumber[0] || question[1] == guessNumber[2]) balls++;
+        if (question[2] == guessNumber[0] || question[2] == guessNumber[1]) balls++;
+        return balls;
+    }
+    bool checkSolved(int strikes) {
+        if (strikes == maxDigitCount) return true;
+        return false;
+    }
+
     void assertIllegalArgument(const std::string& guessNumber)
     {
         if (guessNumber.length() != 3) {
