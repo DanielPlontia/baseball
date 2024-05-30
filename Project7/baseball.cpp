@@ -11,11 +11,18 @@ public:
         : question{ question } {}
 
     GuessResult guess(const string& guessNumber) {
+        GuessResult result{ false, 0, 0 };
         assertIllegalArgument(guessNumber);
+        for (int i = 0; i < 3; i++)
+        {
+            if (guessNumber[i] == question[i]) result.strikes++;
+        }
+        if (result.strikes == 3) result.solved = true;
+
         if (question == guessNumber) {
             return { true, 3, 0 };
         }
-        return { false, 0, 0 };
+        return result;
     }
     void assertIllegalArgument(const std::string& guessNumber)
     {
