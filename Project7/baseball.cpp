@@ -16,6 +16,9 @@ public:
         for (int i = 0; i < 3; i++) {
             if (guessNumber[i] == question[i]) result.strikes++;
         }
+        if (question[0] == guessNumber[1] || question[0] == guessNumber[2]) result.balls++;
+        if (question[1] == guessNumber[0] || question[1] == guessNumber[2]) result.balls++;
+        if (question[2] == guessNumber[0] || question[2] == guessNumber[1]) result.balls++;
         if (result.strikes == 3) result.solved = true;
         return result;
     }
