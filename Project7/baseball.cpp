@@ -7,19 +7,23 @@ struct GuessResult {
 };
 class Baseball {
 public:
+    const int maxDigitCount = 3;
     explicit Baseball(const string& question)
         : question{ question } {}
 
     GuessResult guess(const string& guessNumber) {
         GuessResult result{ false, 0, 0 };
         assertIllegalArgument(guessNumber);
-        for (int i = 0; i < 3; i++) {
-            if (guessNumber[i] == question[i]) result.strikes++;
+        for (int questionIndex = 0; questionIndex < maxDigitCount; questionIndex++) {
+            for (int guessNumberIndex = 0; guessNumberIndex < maxDigitCount; guessNumberIndex++) {
+                if (question[questionIndex] == guessNumber[guessNumberIndex]) {
+                    if (questionIndex == guessNumberIndex) result.strikes++;
+                    else result.balls++;
+                }
+            }
         }
-        if (question[0] == guessNumber[1] || question[0] == guessNumber[2]) result.balls++;
-        if (question[1] == guessNumber[0] || question[1] == guessNumber[2]) result.balls++;
-        if (question[2] == guessNumber[0] || question[2] == guessNumber[1]) result.balls++;
-        if (result.strikes == 3) result.solved = true;
+
+        if (result.strikes == maxDigitCount) result.solved = true;
         return result;
     }
     void assertIllegalArgument(const std::string& guessNumber)
